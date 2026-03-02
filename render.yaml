@@ -1,0 +1,112 @@
+services:
+  - type: web
+    name: svs-agente
+    runtime: docker
+    plan: free
+    
+    # Configuração de build
+    dockerfile: ./Dockerfile
+    dockerfilePath: ./Dockerfile
+    
+    # Porta
+    port: 3000
+    
+    # Variáveis de ambiente
+    envVars:
+      - key: NODE_ENV
+        value: production
+      
+      - key: PORT
+        value: 3000
+      
+      # Site alvo para monitoramento
+      - key: TARGET_SITE_URL
+        value: https://svs-solucoes.surge.sh
+        sync: false
+      
+      # GitHub
+      - key: GITHUB_REPO_OWNER
+        value: SidneyJuniorxz
+        sync: false
+      
+      - key: GITHUB_REPO_NAME
+        value: SITE-SVS
+        sync: false
+      
+      - key: GITHUB_TOKEN
+        sync: false
+      
+      # Banco de dados
+      - key: DATABASE_URL
+        sync: false
+      
+      # Autenticação
+      - key: JWT_SECRET
+        sync: false
+      
+      # OAuth Manus
+      - key: VITE_APP_ID
+        sync: false
+      
+      - key: OAUTH_SERVER_URL
+        value: https://api.manus.im
+        sync: false
+      
+      - key: VITE_OAUTH_PORTAL_URL
+        value: https://manus.im/login
+        sync: false
+      
+      # APIs Manus
+      - key: BUILT_IN_FORGE_API_KEY
+        sync: false
+      
+      - key: BUILT_IN_FORGE_API_URL
+        value: https://api.manus.im
+        sync: false
+      
+      - key: VITE_FRONTEND_FORGE_API_KEY
+        sync: false
+      
+      - key: VITE_FRONTEND_FORGE_API_URL
+        value: https://api.manus.im
+        sync: false
+      
+      # Owner
+      - key: OWNER_OPEN_ID
+        sync: false
+      
+      - key: OWNER_NAME
+        value: Admin
+        sync: false
+      
+      # Analytics
+      - key: VITE_ANALYTICS_ENDPOINT
+        sync: false
+      
+      - key: VITE_ANALYTICS_WEBSITE_ID
+        sync: false
+      
+      # Intervalos de monitoramento (em milissegundos)
+      - key: UPTIME_CHECK_INTERVAL
+        value: "300000"  # 5 minutos
+        sync: false
+      
+      - key: SEO_ANALYSIS_INTERVAL
+        value: "86400000"  # 24 horas
+        sync: false
+      
+      - key: PERFORMANCE_CHECK_INTERVAL
+        value: "3600000"  # 1 hora
+        sync: false
+    
+    # Comandos de build
+    buildCommand: pnpm install && pnpm db:push && pnpm build
+    
+    # Comando de start
+    startCommand: node dist/index.js
+    
+    # Healthcheck
+    healthCheckPath: /
+    
+    # Autoscaling (desabilitado no plano free)
+    autoDeploy: true
