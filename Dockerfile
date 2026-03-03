@@ -9,6 +9,9 @@ RUN npm install -g pnpm
 # Copiar arquivos de dependência
 COPY package.json pnpm-lock.yaml ./
 
+# Copiar patches (necessário para pnpm install)
+COPY patches ./patches/
+
 # Instalar dependências
 RUN pnpm install --frozen-lockfile
 
