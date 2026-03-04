@@ -49,21 +49,23 @@ export const config = {
 
 /**
  * Validar configurações críticas
+ * Apenas DATABASE_URL e TARGET_SITE_URL são obrigatórios
  */
 export function validateConfig(): string[] {
   const errors: string[] = [];
   
+  // DATABASE_URL é obrigatório em produção
   if (!config.databaseUrl && process.env.NODE_ENV === "production") {
     errors.push("DATABASE_URL é obrigatório em produção");
   }
   
-  if (!config.builtInForgeApiKey && process.env.NODE_ENV === "production") {
-    errors.push("BUILT_IN_FORGE_API_KEY é obrigatório em produção");
-  }
-  
+  // TARGET_SITE_URL é sempre obrigatório
   if (!config.targetSiteUrl) {
     errors.push("TARGET_SITE_URL é obrigatório");
   }
+  
+  // Todas as outras variáveis são opcionais
+  // OAuth, Manus APIs, e outras funcionalidades são opcionais
   
   return errors;
 }
@@ -80,4 +82,14 @@ export function logConfig(): void {
   console.log(`  - Uptime Check: a cada ${config.uptimeCheckInterval / 1000}s`);
   console.log(`  - SEO Analysis: a cada ${config.seoAnalysisInterval / 1000}s`);
   console.log(`  - Performance Check: a cada ${config.performanceCheckInterval / 1000}s`);
+  
+  if (!config.githubToken) {
+    console.warn("[Config] AVISO: GITHUB_TOKEN nao configurado - analise de codigo desabilitada");
+  }
+  if (!config.builtInForgeApiKey) {
+    console.warn("[Config] AVISO: BUILT_IN_FORGE_API_KEY nao configurado - LLM desabilitado");
+  }
+  if (!config.viteAppId) {
+    console.warn("[Config] AVISO: VITE_APP_ID nao configurado - OAuth desabilitado");
+  }
 }
